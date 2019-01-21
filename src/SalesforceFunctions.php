@@ -22,6 +22,19 @@ class SalesforceFunctions {
   private $urlVersion = null;
   private $salesForceIDPaterns = [];
 
+  /**
+   * コンストラクタ
+   *
+   * @param array $config {
+   *     @type string client_id クライアントID(必須)
+   *     @type string client_secret クライアントシークレット鍵(必須)
+   *     @type string user_name ユーザー名(必須)
+   *     @type string password  パスワード(必須)
+   *     @type string security_token  シークレットトークン
+   *     @type string domain  APIバージョン
+   * }
+   */
+
   public function __construct($config = []) {
     $defaultConfig = [
       'grant_type' => 'password',
@@ -29,8 +42,8 @@ class SalesforceFunctions {
       'client_secret' => '',
       'user_name' => '',
       'password' => '',
-      'security_token' => null,
       'domain' => '',
+      'security_token' => null,
       'api_version' => null
     ];
     $this->config = array_merge($defaultConfig, $config);
@@ -41,7 +54,15 @@ class SalesforceFunctions {
 
   protected static $_ns = __NAMESPACE__;
 
-  // アクセストークン取得
+  /**
+   * OAuth認証を実行する
+   *
+   * @return array {
+   *   string アクセストークン
+   *   string インスタンスURL
+   * }
+   *
+   */
   public function joinOAuth(){
     $config = $this->config;
 
@@ -75,22 +96,34 @@ class SalesforceFunctions {
     }
 
     // トークンを変数にセットする
-    $this->setToken($accessToken, $instanceURL);
+    $this->setJoinData($accessToken, $instanceURL);
     $this->setVersionURL($this->config['api_version']);
 
     // 戻り値を吐き出し
-    return $this->getToken();
+    return $this->getJoinData();
 
   }
 
-  // トークン情報をセットする
-  public function setToken($accessToken, $instanceURL){
+  /**
+   * salesforceのAPI接続情報をインスタンスに設定する
+   *
+   * @param string $accessToken アクセストークン
+   * @param string $accessToken インスタンスURL
+   */
+  public function setJoinData($accessToken, $instanceURL){
     $this->instanceURL = $instanceURL;
     $this->accessToken = $accessToken;
   }
 
-  // トークン情報を取得
-  public function getToken(){
+  /**
+   * salesforceのAPI接続情報を取得する
+   *
+   * @return array {
+   *   string アクセストークン
+   *   string インスタンスURL
+   * }
+   */
+  public function getJoinData(){
     return [$this->accessToken, $this->instanceURL];
   }
 
@@ -149,10 +182,13 @@ class SalesforceFunctions {
 
   }
 
-  // Attachmentオブジェクトからファイルを取得する
-  public function getAttachementFile(
-    $id
-  ){
+  /**
+   * Attachmentオブジェクトからファイルを取得する
+   *
+   * @param string $id Attachmentオブジェクトから取得するID
+   * @return Attachmentオブジェクトから取得したデータ
+   */
+  public function getAttachementFile($id){
     // Attachement経由でデータを取得する。
     return $this->getBlobDataBody('Attachment', $id);
 
@@ -205,7 +241,13 @@ class SalesforceFunctions {
     return $rowData;
   }
 
-  // API経由で取得したデータからRecodesのデータを返す
+  /**
+   * API経由で取得したデータからRecodesのデータを取得する
+   *
+   * @param string $query 実行するSOQL
+   * @return array SOQLに該当する結果
+   *
+   */
   public function getRecodes($query) {
     $rowData = $this->getDataInSoql($query);
     if(! isset($rowData['done']) || ! $rowData['done']){

@@ -18,24 +18,17 @@ APIのバージョンは「v44.0」の時に作成しています。
 ```php
 require_once 'SalesforceFunctions.php';
 
-use SalesforceAPIByUsernameAndPassword;
-
 $salesforce = new SalesforceAPIByUsernameAndPassword\SalesforceFunctions([
   'client_id' => '',        // クライアントID
   'client_secret' => '',    // シークレット鍵
   'user_name' => '',        // ユーザ名
   'password' => '',         // パスワード
-  'domain' => 'https://(ドメイン).salesforce.com'
+  'domain' => 'https://(登録しているAPIのドメイン).salesforce.com'
 ]);
 ```
 
-#### バージョンを指定する場合
-何も指定しない場合は、最新バージョンを取得します。
-バージョンを指定する場合は、```api_version```を追加します。  
-例えばバージョン44を指定する場合は、```v44.0```と指定します。
-
-#### セキュリティートークンを指定する
-セキュリティトークンを指定する場合は、```security_token```を追加します。
+#### configファイル
+クラスのコンストラクタに指定する要素は、```config/config.php```にまとめているのでファイルを複製して指定する事も可能。
 
 ## OAuth認証
 salesforceにOAuth認証します。  
@@ -44,14 +37,16 @@ salesforceにOAuth認証します。
 ```php
 $token = $salesforce->joinOAuth();
 if(empty($token)){
-    // 取得できていなければエラー処理をする
+    // 取得できていなければエラー処理
 }
 ```
 
 ## データ取得
-json形式でデータを取得します。
+SOQLクエリを実行して結果を取得します。
 
 ```php
-$salesforce->getRecodes(SOQLクエリ);
-// レコードの連想配列
+$records = $salesforce->getRecodes(SOQLクエリ);　// レコードの連想配列
+if(! is_array($lists)) {
+    // 配列以外のデータの場合はエラー処理
+}
 ```

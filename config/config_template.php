@@ -7,5 +7,7 @@ return [
   'security_token' => '',
   'domain' => '',
   'api_version' => 'v44.0',     // 2018年12月時点でのAPIバージョン
+  'security_token' => null,
+  'api_version' => null
 ]
 ?>
