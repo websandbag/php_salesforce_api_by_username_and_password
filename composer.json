@@ -1,0 +1,18 @@
+{
+    "name": "websandbag/php_salesforce_oauth_username_password",
+    "description": "salesforce oauth login and get data",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+      {
+        "name": "Hirofumi Nakahashi",
+        "email": "nakahashi_h@websandbag.com"
+      }
+    ],
+    "require": {},
+    "autoload": {
+      "psr-4": {
+        "SalesforceFunctions\\": "src/"
+      }
+    }
+}
